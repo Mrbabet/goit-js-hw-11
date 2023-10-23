@@ -1,20 +1,34 @@
 import Notiflix from 'notiflix';
 import ApiService from './api';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+const lightbox = new SimpleLightbox('.photo-card a', {
+  captions: true,
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 const refs = {
   form: document.querySelector('#search-form'),
-  gallery: document.querySelector('div.gallery'),
-  loadMoreBtn: document.querySelector('button.load-more'),
+  gallery: document.querySelector('.gallery'),
+  loadMoreBtn: document.querySelector('.load-more'),
+  sort: document.querySelector('.sort-btn'),
 };
 refs.loadMoreBtn.style.display = 'none';
 const apiImages = new ApiService();
 
+const onSort = function (sortArr) {
+  const sortedArr = sortArr.sort((a, b) => a.likes - b.likes);
+  renderCard(sortedArr);
+};
+
 const onSubmit = function (e) {
-  console.log(apiImages);
+  apiImages.resetPage();
   e.preventDefault();
+  lightbox.refresh();
 
   apiImages.query = e.currentTarget.elements.searchQuery.value;
-  apiImages.resetPage();
 
   if (apiImages.query === '') {
     Notiflix.Notify.info('Please enter your search query!');
@@ -48,7 +62,6 @@ const onSubmit = function (e) {
   });
 };
 const onLoadMore = function () {
-  console.log(apiImages);
   apiImages.getData().then(data => {
     const searchQuerries = data.hits;
     renderCard(searchQuerries);
@@ -64,7 +77,9 @@ const renderCard = function (dataArr) {
   const searchQuerries = dataArr
     .map(item => {
       return `<div class="photo-card">
-    <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" />
+      <a href= "${item.largeImageURL}"><img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" /></a>
+    
+      
     <div class="info">
       <p class="info-item">
         <b>${item.likes}Likes</b>

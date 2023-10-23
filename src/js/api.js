@@ -6,7 +6,7 @@ const API_KEY = '40190153-1f7ba2f721d69c0d589a95a2c';
 export default class ApiService {
   constructor() {
     this.searchQuery = '';
-    this.page = '';
+    this.currentPage = 1;
   }
   async getData() {
     try {
@@ -17,17 +17,18 @@ export default class ApiService {
           image_type: 'photo',
           orientation: 'horizontal',
           safeseatch: true,
+          page: this.currentPage,
           per_page: 40,
         },
       });
-      this.page += 1;
+      this.currentPage += 1;
       return response.data;
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }
   resetPage() {
-    this.page = 1;
+    this.currentPage = 1;
   }
   get query() {
     return this.searchQuery;
