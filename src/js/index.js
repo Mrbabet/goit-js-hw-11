@@ -18,11 +18,6 @@ const refs = {
 refs.loadMoreBtn.style.display = 'none';
 const apiImages = new ApiService();
 
-const onSort = function (sortArr) {
-  const sortedArr = sortArr.sort((a, b) => a.likes - b.likes);
-  renderCard(sortedArr);
-};
-
 const onSubmit = function (e) {
   apiImages.resetPage();
   e.preventDefault();
@@ -78,8 +73,6 @@ const renderCard = function (dataArr) {
     .map(item => {
       return `<div class="photo-card">
       <a href= "${item.largeImageURL}"><img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" /></a>
-    
-      
     <div class="info">
       <p class="info-item">
         <b>${item.likes}Likes</b>
