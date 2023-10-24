@@ -15,15 +15,15 @@ const refs = {
   loadMoreBtn: document.querySelector('.load-more'),
   sort: document.querySelector('.sort-btn'),
 };
+
 refs.loadMoreBtn.style.display = 'none';
 const apiImages = new ApiService();
 
 const onSubmit = function (e) {
   apiImages.resetPage();
   e.preventDefault();
-  lightbox.refresh();
 
-  apiImages.query = e.currentTarget.elements.searchQuery.value;
+  apiImages.query = e.currentTarget.elements.searchQuery.value.trim();
 
   if (apiImages.query === '') {
     Notiflix.Notify.info('Please enter your search query!');
@@ -71,26 +71,30 @@ const onLoadMore = function () {
 const renderCard = function (dataArr) {
   const searchQuerries = dataArr
     .map(item => {
-      return `<div class="photo-card">
-      <a href= "${item.largeImageURL}"><img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" /></a>
-    <div class="info">
-      <p class="info-item">
-        <b>${item.likes}Likes</b>
-      </p>
-      <p class="info-item">
-        <b>${item.views}Views</b>
-      </p>
-      <p class="info-item">
-        <b>${item.comments}Comments</b>
-      </p>
-      <p class="info-item">
-        <b>${item.downloads}Downloads</b>
-      </p>
-    </div>
-  </div>`;
+      return `
+      <div class="photo-card">
+        <a class="photo-link" href="${item.largeImageURL}">
+        <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" />
+        </a>
+          <div class="info">
+            <p class="info-item">
+               <b>${item.likes}Likes</b>
+            </p>
+            <p class="info-item">
+               <b>${item.views}Views</b>
+            </p>
+            <p class="info-item">
+              <b>${item.comments}Comments</b>
+            </p>
+            <p class="info-item">
+              <b>${item.downloads}Downloads</b>
+            </p>
+          </div>
+        </div>`;
     })
     .join('');
   refs.gallery.insertAdjacentHTML('beforeend', searchQuerries);
+  lightbox.refresh();
 };
 
 refs.form.addEventListener('submit', onSubmit);

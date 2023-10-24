@@ -19,6 +19,7 @@ export default class ApiService {
           safeseatch: true,
           page: this.currentPage,
           per_page: 40,
+          endOfResults: false,
         },
       });
       this.currentPage += 1;
